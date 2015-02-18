@@ -62,6 +62,7 @@ public class DetailActivity extends ActionBarActivity {
 
         private static final String LOG_TAG = DetailFragment.class.getSimpleName();
         private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
+        public static final String EXTRA_TEXT_FORECAST = "ForecastDetail";
         private String mForecast;
 
         public DetailFragment() {
@@ -74,9 +75,10 @@ public class DetailActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
             Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(intent.EXTRA_TEXT)) {
-                mForecast = intent.getStringExtra(intent.EXTRA_TEXT);
+            if (intent != null && intent.hasExtra(EXTRA_TEXT_FORECAST)) {
+                mForecast = intent.getExtras().getString(EXTRA_TEXT_FORECAST);
                 TextView textView = (TextView) rootView.findViewById(R.id.details_txt);
+                //Log.v("DetailActivity", mForecast);
                 textView.setText(mForecast);
             }
 

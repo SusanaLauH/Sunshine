@@ -45,7 +45,7 @@ public class ForecastFragment extends Fragment {
      */
     public static final String LOG_TAG = "TAG";
     private ArrayAdapter<String> mForecastAdapter;
-    public static final String EXTRA_TEXT = "ForecastDetail";
+    public static final String EXTRA_TEXT_FORECAST = "ForecastDetail";
     private String location;
 
     public ForecastFragment() {
@@ -129,7 +129,8 @@ public class ForecastFragment extends Fragment {
                 Toast toast = Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT);
                 toast.show();
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra(EXTRA_TEXT, forecast);
+                intent.putExtra(EXTRA_TEXT_FORECAST, forecast);
+                //Log.v("Fragment", forecast);
                 getActivity().startActivity(intent);
             }
         });
