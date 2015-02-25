@@ -59,7 +59,12 @@ public class MainActivity extends ActionBarActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String location = sharedPref.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_defaultValue));
 
-        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q", location).build();
+        Uri myLocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q", location).build();
+        Uri geoLocation = Uri.parse("geo:0,0?q=" + location);
+        //Uri geoLocation = Uri.parse("geo:0,0").buildUpon().appendQueryParameter("q", location).build();
+        Log.v("Geolocation",myLocation.toString());
+        //It removes the zeros geo:?q=94043
+        //Uri geolocation = Uri.parse("geo:0,0?q=95117");
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(geoLocation);
         if (intent.resolveActivity(getPackageManager()) != null) {
