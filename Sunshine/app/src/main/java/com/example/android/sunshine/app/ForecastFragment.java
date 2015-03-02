@@ -2,8 +2,6 @@ package com.example.android.sunshine.app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -23,12 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +62,8 @@ public class ForecastFragment extends Fragment {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //location = sharedPref.getString(SettingsActivity.KEY_PREF_LOCATION, "");
         location = sharedPref.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_defaultValue));
-        new FetchWeatherTask().execute(location);
+        //new FetchWeatherTask().execute(location);
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity(), mForecastAdapter);
     }
 
 
@@ -235,7 +228,7 @@ public class ForecastFragment extends Fragment {
 
 
 
-
+    /* Initial FetchWeather Task
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
@@ -349,7 +342,7 @@ public class ForecastFragment extends Fragment {
         return null;
         }
     }
-
+*/
 
 
 }
