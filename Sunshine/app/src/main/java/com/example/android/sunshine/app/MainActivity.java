@@ -13,6 +13,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final String FORECASTFRAGMENT_TAG = "FFTAG";
+    private String mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +22,24 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
                     .commit();
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String location = Utility.getPreferredLocation(this);
+        // update the location in our second pane using the fragment manager
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if (null != ff) {
+                ff.onLocationChanged();
+            }
+            mLocation = location;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,33 +58,36 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-           Intent intent = new Intent(this, SettingsActivity.class);
-           startActivity(intent);
-           return true;
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
         }
 
-            if (id == R.id.action_map) {
-                showMapBasedonLocationPreference();
+        if (id == R.id.action_map) {
+            showMapBasedonLocationPreference();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
     private void showMapBasedonLocationPreference() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String location = sharedPref.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_defaultValue));
+        String location = Utility.getPreferredLocation(this);
 
         Uri myLocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q", location).build();
         Uri geoLocation = Uri.parse("geo:0,0?q=" + location);
         //Uri geoLocation = Uri.parse("geo:0,0").buildUpon().appendQueryParameter("q", location).build();
-        Log.v("Geolocation",myLocation.toString());
+        Log.v("Geolocation", myLocation.toString());
         //It removes the zeros geo:?q=94043
         //Uri geolocation = Uri.parse("geo:0,0?q=95117");
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(geoLocation);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
-        }   else {Log.d(LOG_TAG, "Couldn't call " + location + ", no receiving apps installed!"); }
+        } else {
+            Log.d(LOG_TAG, "Couldn't call " + location + ", no receiving apps installed!");
+        }
     }
 
 
