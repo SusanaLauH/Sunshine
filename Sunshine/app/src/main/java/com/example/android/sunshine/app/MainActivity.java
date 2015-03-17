@@ -1,14 +1,13 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
 
 public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback {
@@ -46,6 +45,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -88,32 +89,12 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             return true;
         }
 
-        if (id == R.id.action_map) {
-            showMapBasedonLocationPreference();
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void showMapBasedonLocationPreference() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String location = Utility.getPreferredLocation(this);
 
-        Uri myLocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q", location).build();
-        Uri geoLocation = Uri.parse("geo:0,0?q=" + location);
-        //Uri geoLocation = Uri.parse("geo:0,0").buildUpon().appendQueryParameter("q", location).build();
-        Log.v("Geolocation", myLocation.toString());
-        //It removes the zeros geo:?q=94043
-        //Uri geolocation = Uri.parse("geo:0,0?q=95117");
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(geoLocation);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Log.d(LOG_TAG, "Couldn't call " + location + ", no receiving apps installed!");
-        }
-    }
 
 
     @Override
